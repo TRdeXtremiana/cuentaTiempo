@@ -1,10 +1,14 @@
 // Variables globales
 let horaSeleccionada = '14:30'; // Valor por defecto
+let confetiLanzado = false;
 const barra = document.getElementById('barraProgreso');
 const porcentajeElemento = document.getElementById('porcentaje');
+const tiempoRestanteElemento = document.getElementById('tiempoRestante');
+const hastaDiaElemento = document.getElementById('hastaDia');
+const horaElemento = document.getElementById('hora');
 
 // Función para obtener la hora en tiempo real con la zona horaria de España
-function actualizarHora() {
+function obtenerHoraActual() {
 	const opciones = {
 		timeZone: 'Europe/Madrid',
 		hour: '2-digit',
@@ -12,62 +16,66 @@ function actualizarHora() {
 		second: '2-digit',
 		hour12: false
 	};
-	const horaActual = new Date().toLocaleTimeString('es-ES', opciones);
-	document.getElementById('hora').textContent = horaActual;
+	return new Date().toLocaleTimeString('es-ES', opciones);
 }
 
-// Función para actualizar el cronómetro y calcular el tiempo restante según la hora seleccionada
-function actualizarCronometro() {
+// Función para actualizar la hora en el DOM
+function actualizarHora() {
+	horaElemento.textContent = obtenerHoraActual();
+}
+
+// Función para calcular la siguiente hora seleccionada
+function calcularSiguienteHora(horaSeleccionada) {
 	const ahora = new Date();
 	const [hora, minuto] = horaSeleccionada.split(':').map(num => parseInt(num));
-
-	// Establecer la hora de la próxima ocurrencia de la hora seleccionada
 	const siguienteHora = new Date();
+
 	if (ahora.getHours() > hora || (ahora.getHours() === hora && ahora.getMinutes() >= minuto)) {
 		siguienteHora.setDate(siguienteHora.getDate() + 1); // Si ya pasó, calcular para mañana
 	}
 	siguienteHora.setHours(hora, minuto, 0, 0); // Establecer la hora seleccionada
+	return siguienteHora;
+}
 
-	// Calcular el tiempo restante
+// Función para calcular el tiempo restante hasta la siguiente hora
+function calcularTiempoRestante(siguienteHora) {
+	const ahora = new Date();
 	const diferencia = siguienteHora - ahora;
-
 	const horasRestantes = Math.floor(diferencia / 1000 / 60 / 60);
 	const minutosRestantes = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
 	const segundosRestantes = Math.floor((diferencia % (1000 * 60)) / 1000);
 
-	// Función para asegurarse de que el valor tenga 2 dígitos
-	const formatearTiempo = (tiempo) => {
-		return tiempo < 10 ? `0${tiempo}` : tiempo;
-	};
+	return { horasRestantes, minutosRestantes, segundosRestantes };
+}
+
+// Función para formatear el tiempo a dos dígitos
+function formatearTiempo(tiempo) {
+	return tiempo < 10 ? `0${tiempo}` : tiempo;
+}
+
+// Función para actualizar el cronómetro y calcular el tiempo restante
+function actualizarCronometro() {
+	const siguienteHora = calcularSiguienteHora(horaSeleccionada);
+	const { horasRestantes, minutosRestantes, segundosRestantes } = calcularTiempoRestante(siguienteHora);
 
 	// Mostrar el tiempo restante con formato 00:00:00
-	document.getElementById('tiempoRestante').textContent = `${formatearTiempo(horasRestantes)}:${formatearTiempo(minutosRestantes)}:${formatearTiempo(segundosRestantes)}`;
+	tiempoRestanteElemento.textContent = `${formatearTiempo(horasRestantes)}:${formatearTiempo(minutosRestantes)}:${formatearTiempo(segundosRestantes)}`;
 
 	// Mostrar el día de la próxima hora seleccionada
 	let siguienteDiaTexto;
-	if (ahora.getHours() < hora || (ahora.getHours() === hora && ahora.getMinutes() < minuto)) {
+	const ahora = new Date();
+	if (ahora.getHours() < siguienteHora.getHours() || (ahora.getHours() === siguienteHora.getHours() && ahora.getMinutes() < siguienteHora.getMinutes())) {
 		siguienteDiaTexto = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'][ahora.getDay()];
 	} else {
 		siguienteDiaTexto = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'][(ahora.getDay() + 1) % 7]; // Día siguiente
 	}
-
-	document.getElementById('hastaDia').textContent = `Hasta las ${horaSeleccionada} del ${siguienteDiaTexto}`;
+	hastaDiaElemento.textContent = `Hasta las ${horaSeleccionada} del ${siguienteDiaTexto}`;
 }
 
 // Función para actualizar la barra de progreso según el tiempo restante
 function actualizarBarraProgreso() {
-	const ahora = new Date();
-	const [hora, minuto] = horaSeleccionada.split(':').map(num => parseInt(num));
-
-	// Establecer la hora de la próxima ocurrencia de la hora seleccionada
-	const siguienteHora = new Date();
-	if (ahora.getHours() > hora || (ahora.getHours() === hora && ahora.getMinutes() >= minuto)) {
-		siguienteHora.setDate(siguienteHora.getDate() + 1); // Si ya pasó, calcular para mañana
-	}
-	siguienteHora.setHours(hora, minuto, 0, 0); // Establecer la hora seleccionada
-
-	// Calcular el tiempo restante en milisegundos
-	const tiempoRestante = siguienteHora - ahora;
+	const siguienteHora = calcularSiguienteHora(horaSeleccionada);
+	const tiempoRestante = siguienteHora - new Date();
 
 	// Calcular el porcentaje de progreso de la barra
 	const tiempoTotal = 1000 * 60 * 60 * 24; // Total de 24 horas en milisegundos
@@ -78,9 +86,6 @@ function actualizarBarraProgreso() {
 
 	// Actualizar el porcentaje mostrado en la barra (formato 00,00%)
 	porcentajeElemento.textContent = `${porcentaje}%`;
-
-	// Referencia al elemento de tiempo restante
-	const tiempoRestanteElemento = document.getElementById('tiempoRestante');
 
 	// Cambiar el color de la barra y del texto según el progreso
 	if (porcentaje > 50) {
@@ -97,12 +102,16 @@ function actualizarBarraProgreso() {
 		tiempoRestanteElemento.style.color = '#2ecc71'; // Verde
 	}
 
-	// Cuando la barra llegue al 0%, mostrar el efecto de confeti
-	if (porcentaje <= 0) {
-		lanzarConfeti();
+	// Cuando la barra llegue al 0% y falten menos de 3 segundos, mostrar el efecto de confeti
+	if (porcentaje <= 0.00 && !confetiLanzado) {
+		const { segundosRestantes } = calcularTiempoRestante(siguienteHora);
+		if (segundosRestantes <= 1) { // Solo lanzar confeti en el último segundo
+			confetiLanzado = true; // Evitar que se lance más de una vez
+			lanzarConfeti();
+			console.log(`Hora fin: ${siguienteHora.toLocaleTimeString('es-ES')}`);
+		}
 	}
 }
-
 
 // Función para lanzar el confeti
 function lanzarConfeti() {

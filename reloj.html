@@ -7,6 +7,8 @@
 	<title>Reloj y Cronómetro</title>
 	<link rel="icon" href="assets/images/reloj.png" type="image/x-icon">
 	<link rel="stylesheet" href="css/style.css">
+
+	<!-- Efectos -->
 	<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
 </head>
 
@@ -26,13 +28,15 @@
 
 	<div class="hora-seleccion">
 		<label for="horaInput">Selecciona la hora: </label>
-		<input type="time" id="horaInput" value="14:30" />
+		<input type="time" id="horaInput" />
 	</div>
 
 	<div class="barra-container">
 		<div id="barraProgreso" class="barra"></div>
 		<span id="porcentaje" class="porcentaje">0%</span>
 	</div>
+
+	<div id="particles-js"></div>
 
 	<script src="js/script.js"></script>
 </body>

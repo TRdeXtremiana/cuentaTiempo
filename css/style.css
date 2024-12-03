@@ -126,6 +126,31 @@ input[type="time"]:focus {
 	background-color: #e74c3c;
 }
 
+/* Animación para un contenedor */
+.animacion-efecto {
+	animation: bounce 2s ease-in-out;
+}
+
+@keyframes bounce {
+	0% {
+		transform: scale(1);
+	}
+
+	50% {
+		transform: scale(1.2);
+	}
+
+	100% {
+		transform: scale(1);
+	}
+}
+
+/* Efecto de luz */
+.efecto-luz {
+	background-color: yellow;
+	transition: background-color 0.5s ease-in-out;
+}
+
 /* Media Queries */
 
 /* Desktop grande (pantallas anchas) */

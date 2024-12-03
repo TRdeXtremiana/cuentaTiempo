@@ -1,3 +1,4 @@
+/* General */
 * {
 	margin: 0;
 	padding: 0;
@@ -13,6 +14,8 @@ body {
 	height: 100vh;
 	flex-direction: column;
 	color: #b4b4b4;
+	overflow-x: hidden;
+	/* Evita scroll horizontal */
 }
 
 .container {
@@ -21,17 +24,21 @@ body {
 	align-items: center;
 	width: 80%;
 	flex-wrap: wrap;
+	gap: 20px;
+	/* Añade separación entre elementos */
 }
 
 .reloj,
 .cronometro {
 	background-color: #1d1d1d;
 	border-radius: 10px;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+	box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+	/* Sombras más suaves */
 	padding: 20px;
 	text-align: center;
 	width: 45%;
-	margin-bottom: 20px;
+	min-width: 280px;
+	/* Evita que se encojan demasiado */
 }
 
 h1 {
@@ -53,24 +60,32 @@ h1 {
 }
 
 #hastaDia {
-	font-size: 1.5em;
+	font-size: 1.2em;
 	color: #b4b4b4;
 }
 
 .hora-seleccion {
 	margin-top: 20px;
 	color: #fff;
+	text-align: center;
 }
 
 input[type="time"] {
 	font-size: 1.5em;
 	padding: 10px;
-	width: 150px;
+	width: 180px;
+	/* Ajuste para más comodidad */
 	text-align: center;
 	background-color: #333;
 	border: 2px solid #000;
 	border-radius: 5px;
 	color: #fff;
+	outline: none;
+	transition: border-color 0.3s ease;
+}
+
+input[type="time"]:focus {
+	border-color: #1abc9c;
 }
 
 .barra-container {
@@ -86,7 +101,7 @@ input[type="time"] {
 .barra {
 	height: 100%;
 	width: 0%;
-	transition: width 1s ease-in-out;
+	transition: width 1s ease-in-out, background-color 0.3s ease;
 	border-radius: 5px;
 }
 
@@ -113,59 +128,51 @@ input[type="time"] {
 
 /* Media Queries */
 
-/* PC */
-@media (min-width: 1024px) {
+/* Desktop grande (pantallas anchas) */
+@media (min-width: 1200px) {
 	.container {
-		width: 80%;
+		width: 70%;
+		gap: 30px;
+		/* Más espacio en pantallas grandes */
 	}
 
-	.reloj,
-	.cronometro {
-		width: 45%;
+	.barra-container {
+		width: 50%;
+	}
+}
+
+/* PC y tablets horizontales */
+@media (min-width: 768px) and (max-width: 1199px) {
+	.container {
+		width: 80%;
+		flex-wrap: nowrap;
+		justify-content: space-evenly;
 	}
 
 	.barra-container {
 		width: 60%;
 	}
 
-	.porcentaje {
-		font-size: 1.5em;
+	h1 {
+		font-size: 2em;
+	}
+
+	#hora,
+	#tiempoRestante {
+		font-size: 2.5em;
 	}
 }
 
-/* Tablet */
-@media (max-width: 1024px) and (min-width: 768px) {
-	.container {
-		width: 80%;
-		flex-direction: column;
-		align-items: center;
-	}
-
-	.reloj,
-	.cronometro {
-		width: 80%;
-		margin-bottom: 20px;
-	}
-
-	.barra-container {
-		width: 90%;
-	}
-
-	.porcentaje {
-		font-size: 1.2em;
-	}
-}
-
-/* Móviles */
-@media (max-width: 768px) {
+/* Tablets y móviles en vertical */
+@media (max-width: 767px) {
 	body {
 		padding: 10px;
 	}
 
 	.container {
-		width: 100%;
 		flex-direction: column;
 		align-items: center;
+		width: 100%;
 	}
 
 	.reloj,
@@ -178,52 +185,41 @@ input[type="time"] {
 		width: 95%;
 	}
 
-	.porcentaje {
-		font-size: 1.2em;
-	}
-
 	h1 {
-		font-size: 2em;
+		font-size: 1.8em;
 	}
 
 	#hora,
 	#tiempoRestante {
 		font-size: 2em;
 	}
+
+	input[type="time"] {
+		width: 100%;
+	}
 }
 
-/* Orientación Landscape para móviles y tablets */
-@media (max-width: 768px) and (orientation: landscape) {
-	.container {
-		width: 100%;
+/* Orientación landscape para móviles */
+@media (max-width: 767px) and (orientation: landscape) {
+	body {
+		height: auto;
 		flex-direction: row;
-		/* Cambia a fila en landscape */
-		justify-content: space-between;
-		align-items: center;
+		flex-wrap: wrap;
+	}
+
+	.container {
+		flex-direction: row;
+		width: 100%;
+		justify-content: space-evenly;
 	}
 
 	.reloj,
 	.cronometro {
 		width: 45%;
-		/* Los elementos ocupan menos espacio en landscape */
-		margin-bottom: 0;
+		margin-bottom: 10px;
 	}
 
 	.barra-container {
-		width: 90%;
-	}
-
-	.porcentaje {
-		font-size: 1.5em;
-	}
-
-	h1 {
-		font-size: 2.2em;
-		/* Ajusta el tamaño de los títulos */
-	}
-
-	#hora,
-	#tiempoRestante {
-		font-size: 2.5em;
+		width: 80%;
 	}
 }

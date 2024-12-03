@@ -79,16 +79,22 @@ function actualizarBarraProgreso() {
 	// Actualizar el porcentaje mostrado en la barra (formato 00,00%)
 	porcentajeElemento.textContent = `${porcentaje}%`;
 
-	// Cambiar el color de la barra según el progreso
+	// Referencia al elemento de tiempo restante
+	const tiempoRestanteElemento = document.getElementById('tiempoRestante');
+
+	// Cambiar el color de la barra y del texto según el progreso
 	if (porcentaje > 50) {
-		barra.classList.remove('amarilla', 'roja');
-		barra.classList.add('verde');
+		barra.classList.remove('amarilla', 'verde');
+		barra.classList.add('roja');
+		tiempoRestanteElemento.style.color = '#e74c3c'; // Rojo
 	} else if (porcentaje > 25) {
 		barra.classList.remove('verde', 'roja');
 		barra.classList.add('amarilla');
+		tiempoRestanteElemento.style.color = '#f1c40f'; // Amarillo
 	} else {
-		barra.classList.remove('verde', 'amarilla');
-		barra.classList.add('roja');
+		barra.classList.remove('roja', 'amarilla');
+		barra.classList.add('verde');
+		tiempoRestanteElemento.style.color = '#2ecc71'; // Verde
 	}
 
 	// Cuando la barra llegue al 0%, mostrar el efecto de confeti
@@ -96,6 +102,7 @@ function actualizarBarraProgreso() {
 		lanzarConfeti();
 	}
 }
+
 
 // Función para lanzar el confeti
 function lanzarConfeti() {

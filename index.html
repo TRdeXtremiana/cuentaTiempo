@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Reloj y Cronómetro</title>
+	<link rel="icon" href="assets/images/reloj.png" type="image/x-icon">
+	<link rel="stylesheet" href="css/style.css">
+
+	<!-- Efectos -->
+	<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+</head>
+
+<body>
+	<div class="container">
+		<div class="reloj">
+			<h1>Hora Actual</h1>
+			<div id="hora"></div>
+		</div>
+
+		<div class="cronometro">
+			<h1>Cronómetro</h1>
+			<p id="hastaDia"></p>
+			<div id="tiempoRestante"></div>
+		</div>
+	</div>
+
+	<div class="hora-seleccion">
+		<label for="horaInput">Selecciona la hora: </label>
+		<input type="time" id="horaInput" />
+	</div>
+
+	<div class="barra-container">
+		<div id="barraProgreso" class="barra"></div>
+		<span id="porcentaje" class="porcentaje">0%</span>
+	</div>
+
+	<div id="particles-js"></div>
+
+	<script src="js/script.js"></script>
+</body>
+
+</html>
